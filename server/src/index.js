@@ -416,6 +416,16 @@ app.use(serve(path.join(__dirname, '../public')));
 // API 路由
 app.use(router.routes()).use(router.allowedMethods());
 
+// SPA fallback: 非 API 请求返回 index.html
+app.use(async (ctx) => {
+  const fs = require('fs');
+  const indexPath = path.join(__dirname, '../public/index.html');
+  if (fs.existsSync(indexPath)) {
+    ctx.type = 'html';
+    ctx.body = fs.readFileSync(indexPath, 'utf-8');
+  }
+});
+
 const PORT = process.env.VTB_PORT || 3002;
 app.listen(PORT, () => {
   console.log(`[VibeTB] Server running on http://localhost:${PORT}`);
