@@ -3,7 +3,14 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const API = axios.create({ baseURL: '/vibetb/api', withCredentials: true });
-const ASSET = (name) => `/vibetb/assets/${name}`;
+// 智能选择格式：大图用 WebP（体积小 80%+），小图和 fallback 用 PNG
+const ASSET = (name, preferWebP = false) => {
+  if (preferWebP && name.endsWith('.png')) {
+    const webp = name.replace('.png', '.webp');
+    return `/vibetb/assets/${webp}`;
+  }
+  return `/vibetb/assets/${name}`;
+};
 
 // ============================================================
 // Hooks
@@ -92,7 +99,7 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, background: `url(${ASSET('home-title-background.png')}) center/cover` }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, background: `url(${ASSET('home-title-background.png', true)}) center/cover` }}>
       <div style={{ background: 'rgba(255,255,255,0.92)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 360, textAlign: 'center' }}>
         <img src={ASSET('09-team-badge.png')} style={{ width: 80, marginBottom: 16 }} alt="" />
         <h2 style={{ color: '#c77d3a', marginBottom: 4 }}>2026 杭研院团建</h2>
@@ -119,7 +126,7 @@ function HomePage() {
   ];
 
   return <Page title="2026 杭研院团建">
-    <img src={ASSET('home-title-background.png')} style={{ width: '100%', borderRadius: 16, marginBottom: 20 }} alt="" />
+    <img src={ASSET('home-title-background.png', true)} style={{ width: '100%', borderRadius: 16, marginBottom: 20 }} alt="" />
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
       {items.map((item, i) => (
         <div key={i} onClick={() => nav(item.path)} style={{
