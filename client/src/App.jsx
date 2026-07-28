@@ -127,8 +127,8 @@ function HomePage() {
     { icon: '10-camera-badge.png', label: '小游戏', path: '/games', color: '#c77d3a' },
   ];
 
-  return <Page title="2026 杭研院团建">
-    <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', marginBottom: 20, minHeight: 420 }}>
+  return <Page title="2026 杭研院团建" hideHeader>
+    <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column' }}>
       <img src={ASSET('home-title-background.png', true)} style={{ width: '100%', display: 'block' }} alt="" />
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
@@ -178,7 +178,7 @@ function RegisterPage() {
     alert('报名成功！');
   };
 
-  return <Page title="我要报名" backTo="/">
+  return <Page title="我要报名" backTo="/" hideHeader>
     <Card>
       <img src={ASSET('06-phone.png')} style={{ width: 48, display: 'block', margin: '0 auto 12px' }} alt="" />
       <Input label="手机号" value={phone} onChange={setPhone} placeholder="输入手机号即可报名" type="tel" />
@@ -191,7 +191,7 @@ function RegisterPage() {
 
 function CarpoolPage() {
   const nav = useNavigate();
-  return <Page title="拼车出行" backTo="/">
+  return <Page title="拼车出行" backTo="/" hideHeader>
     <Card>
       <img src={ASSET('01-car.png')} style={{ width: 60, display: 'block', margin: '0 auto 12px' }} alt="" />
       <p style={{ textAlign: 'center', color: '#666', marginBottom: 20, fontSize: 14 }}>选择你的出行方式</p>
@@ -236,7 +236,7 @@ function CarpoolDriverPage() {
     nav('/carpool');
   };
 
-  return <Page title="我是车主" backTo="/carpool">
+  return <Page title="我是车主" hideHeader backTo="/carpool">
     <Card>
       <img src={ASSET('btn-driver.png')} style={{ width: '100%', borderRadius: 10, marginBottom: 16 }} alt="" />
       <Input label="总座位数（含司机）" value={seats} onChange={v => setSeats(parseInt(v) || 4)} type="number" />
@@ -272,7 +272,7 @@ function CarpoolListPage() {
     API.get('/carpool/my').then(r => setMy(r.data.data)).catch(() => {});
   };
 
-  return <Page title="选择拼车" backTo="/carpool">
+  return <Page title="选择拼车" hideHeader backTo="/carpool">
     {my?.driver && <Card><p style={{ textAlign: 'center', color: '#999' }}>你是车主，无法乘车</p></Card>}
     {my?.passenger && (
       <Card>
@@ -366,7 +366,7 @@ function CheckinPage() {
 
 function GamesPage() {
   const nav = useNavigate();
-  return <Page title="小游戏" backTo="/">
+  return <Page title="小游戏" hideHeader backTo="/">
     <Card>
       <div onClick={() => nav('/games/undercover')} style={{ textAlign: 'center', cursor: 'pointer', padding: 20 }}>
         <img src={ASSET('08-leaf-badge.png')} style={{ width: 64, marginBottom: 8 }} alt="" />
