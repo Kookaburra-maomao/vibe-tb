@@ -99,7 +99,7 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 40, background: `url(${ASSET('home-title-background.png', true)}) center/cover` }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', padding: '0 0 60px', background: `url(${ASSET('home-title-background.png', true)}) center/cover` }}>
       <div style={{ background: 'rgba(255,255,255,0.92)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 360, textAlign: 'center' }}>
         <img src={ASSET('09-team-badge.png')} style={{ width: 80, marginBottom: 16 }} alt="" />
         <h2 style={{ color: '#c77d3a', marginBottom: 4 }}>2026 杭研院团建</h2>
@@ -126,19 +126,28 @@ function HomePage() {
   ];
 
   return <Page title="2026 杭研院团建">
-    <img src={ASSET('home-title-background.png', true)} style={{ width: '100%', borderRadius: 16, marginBottom: 20 }} alt="" />
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-      {items.map((item, i) => (
-        <div key={i} onClick={() => nav(item.path)} style={{
-          background: '#fff', borderRadius: 14, padding: '24px 16px', textAlign: 'center',
-          cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-        }}>
-          <img src={ASSET(item.icon)} style={{ width: 48, marginBottom: 8 }} alt="" />
-          <div style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>{item.label}</div>
+    <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', marginBottom: 20, minHeight: 420 }}>
+      <img src={ASSET('home-title-background.png', true)} style={{ width: '100%', display: 'block' }} alt="" />
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        background: 'linear-gradient(transparent, rgba(255,255,255,0.95) 40%)',
+        padding: '60px 16px 16px',
+      }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          {items.map((item, i) => (
+            <div key={i} onClick={() => nav(item.path)} style={{
+              background: 'rgba(255,255,255,0.92)', borderRadius: 14, padding: '20px 12px',
+              textAlign: 'center', cursor: 'pointer',
+              boxShadow: '0 2px 12px rgba(0,0,0,0.08)', backdropFilter: 'blur(4px)',
+            }}>
+              <img src={ASSET(item.icon)} style={{ width: 48, marginBottom: 8 }} alt="" />
+              <div style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>{item.label}</div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
-    <div style={{ textAlign: 'center', marginTop: 24 }}>
+    <div style={{ textAlign: 'center' }}>
       <Btn type="ghost" onClick={() => { API.post('/auth/login', { employee_id: user.employee_id, name: user.name }); nav('/login'); }}>退出登录</Btn>
     </div>
   </Page>;
