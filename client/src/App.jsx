@@ -315,10 +315,10 @@ function CheckinPage() {
   const [updating, setUpdating] = useState(null);
 
   const activities = [
-    { key: 'board_game', label: '团队桌游', img: 'activity-board-game.png' },
-    { key: 'frisbee', label: '趣味飞盘', img: 'activity-frisbee.png' },
-    { key: 'paddleboard', label: '水上桨板', img: 'activity-paddleboard.png' },
-    { key: 'barbecue', label: '烧烤时光', img: 'activity-barbecue.png' },
+    { key: 'board_game', label: '团队桌游', img: 'activity-board-game.webp' },
+    { key: 'frisbee', label: '趣味飞盘', img: 'activity-frisbee.webp' },
+    { key: 'paddleboard', label: '水上桨板', img: 'activity-paddleboard.webp' },
+    { key: 'barbecue', label: '烧烤时光', img: 'activity-barbecue.webp' },
   ];
 
   useEffect(() => {
@@ -347,7 +347,7 @@ function CheckinPage() {
             boxShadow: '0 2px 8px rgba(0,0,0,0.04)', opacity: s.checked ? 0.6 : 1,
             border: s.checked ? '2px solid #52c41a' : 'none',
           }}>
-            <img src={ASSET(a.img)} style={{ width: '100%', aspectRatio: '1', objectFit: 'cover' }} alt="" />
+            <img src={ASSET(a.img)} loading="lazy" decoding="async" style={{ width: '100%', aspectRatio: '1', objectFit: 'cover' }} alt="" />
             <div style={{ padding: '10px 12px', textAlign: 'center' }}>
               <div style={{ fontWeight: 600, fontSize: 14 }}>{a.label}</div>
               <div style={{ color: '#888', fontSize: 12, marginTop: 2 }}>
