@@ -1,0 +1,19 @@
+{
+  "name": "vibe-tb-server",
+  "version": "1.0.0",
+  "description": "Vibe TB - 团建报名 H5 后端",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "koa": "^2.15.0",
+    "koa-router": "^12.0.0",
+    "koa-session": "^6.4.0",
+    "koa-static": "^5.0.0",
+    "koa-body": "^6.0.1",
+    "mysql2": "^3.9.0",
+    "dotenv": "^16.4.0"
+  }
+}
