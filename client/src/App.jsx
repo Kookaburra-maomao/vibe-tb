@@ -27,18 +27,20 @@ function useUser() {
 // ============================================================
 // Layout
 // ============================================================
-function Page({ title, backTo, children, extra }) {
+function Page({ title, backTo, children, extra, hideHeader }) {
   const nav = useNavigate();
   return (
-    <div style={{ minHeight: '100vh', background: '#fdf6ee', fontFamily: 'sans-serif' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', borderBottom: '1px solid #f0e8d8', position: 'sticky', top: 0, zIndex: 10 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {backTo && <span onClick={() => nav(backTo)} style={{ fontSize: 20, cursor: 'pointer' }}>←</span>}
-          <span style={{ fontSize: 16, fontWeight: 700, color: '#c77d3a' }}>{title}</span>
+    <div style={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', background: '#fdf6ee', fontFamily: 'sans-serif' }}>
+      {!hideHeader && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', borderBottom: '1px solid #f0e8d8', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {backTo && <span onClick={() => nav(backTo)} style={{ fontSize: 20, cursor: 'pointer' }}>←</span>}
+            <span style={{ fontSize: 16, fontWeight: 700, color: '#c77d3a' }}>{title}</span>
+          </div>
+          {extra}
         </div>
-        {extra}
-      </div>
-      <div style={{ padding: '16px', maxWidth: 480, margin: '0 auto' }}>
+      )}
+      <div style={{ flex: 1, overflow: 'auto', padding: '12px 16px', maxWidth: 480, margin: '0 auto', width: '100%' }}>
         {children}
       </div>
     </div>
@@ -334,7 +336,7 @@ function CheckinPage() {
     finally { setUpdating(null); }
   };
 
-  return <Page title="活动打卡" backTo="/">
+  return <Page title="活动打卡" backTo="/" hideHeader>
     <p style={{ textAlign: 'center', color: '#666', marginBottom: 16, fontSize: 14 }}>
       点击下方活动卡片完成打卡，每个活动限打一次
     </p>
