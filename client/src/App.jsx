@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const API = axios.create({ baseURL: '/api', withCredentials: true });
+const API = axios.create({ baseURL: '/vibetb/api', withCredentials: true });
 const ASSET = (name) => `/vibetb/assets/${name}`;
 
 // ============================================================
