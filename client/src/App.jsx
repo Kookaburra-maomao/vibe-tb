@@ -173,9 +173,12 @@ function RegisterPage() {
 
   const submit = async () => {
     if (!phone.trim()) return alert('请输入手机号');
-    await API.post('/registration', { phone: phone.trim(), note });
-    setRegistered(true);
-    alert('报名成功！');
+    try {
+      await API.post('/registration', { phone: phone.trim(), note });
+      setRegistered(true);
+      alert('报名成功！');
+      nav('/');
+    } catch { alert('报名失败，请重试'); }
   };
 
   return <Page title="我要报名" backTo="/" hideHeader>
@@ -222,10 +225,12 @@ function CarpoolDriverPage() {
 
   const submit = async () => {
     setSaving(true);
-    await API.post('/carpool/driver', { total_seats: seats, plate: plate.trim() || null });
-    setSaving(false);
-    alert('登记成功！');
-    setMy('driver');
+    try {
+      await API.post('/carpool/driver', { total_seats: seats, plate: plate.trim() || null });
+      alert('登记成功！');
+      nav('/carpool');
+    } catch { alert('登记失败'); }
+    finally { setSaving(false); }
   };
 
   const cancelDriver = async () => {
