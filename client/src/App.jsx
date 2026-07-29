@@ -234,11 +234,11 @@ function CarpoolDriverPage() {
   };
 
   const cancelDriver = async () => {
-    // Switch back to passenger
-    await API.post('/carpool/passenger', { driver_id: null });
-    setMy(null);
-    alert('已取消车主身份');
-    nav('/carpool');
+    try {
+      await API.post('/carpool/cancel-driver');
+      alert('已取消车主身份');
+      nav('/carpool');
+    } catch { alert('取消失败'); }
   };
 
   return <Page title="我是车主" hideHeader backTo="/carpool">

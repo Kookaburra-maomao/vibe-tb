@@ -132,6 +132,12 @@ router.get('/carpool/my', requireAuth, async (ctx) => {
   ctx.body = { data: { driver: drivers[0] || null, passenger: passengers[0] || null } };
 });
 
+router.post('/carpool/cancel-driver', requireAuth, async (ctx) => {
+  const uid = ctx.session.user.id;
+  await pool.query('DELETE FROM vibetb_drivers WHERE user_id = ?', [uid]);
+  ctx.body = { message: '已取消车主身份' };
+});
+
 // ============================================================
 // 活动打卡
 // ============================================================
