@@ -150,7 +150,7 @@ function HomePage() {
       </div>
     </div>
     <div style={{ textAlign: 'center' }}>
-      <Btn type="ghost" onClick={() => { API.post('/auth/login', { employee_id: user.employee_id, name: user.name }); nav('/login'); }}>退出登录</Btn>
+      <Btn type="ghost" onClick={async () => { await API.post('/auth/logout'); setUser(null); nav('/login'); }}>退出登录</Btn>
     </div>
   </Page>;
 }

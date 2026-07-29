@@ -57,6 +57,11 @@ router.post('/auth/update-phone', requireAuth, async (ctx) => {
   ctx.body = { data: ctx.session.user, message: '手机号已更新' };
 });
 
+router.post('/auth/logout', async (ctx) => {
+  ctx.session = null;
+  ctx.body = { message: '已退出' };
+});
+
 // ============================================================
 // 报名
 // ============================================================
