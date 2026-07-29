@@ -150,7 +150,7 @@ function HomePage() {
       </div>
     </div>
     <div style={{ textAlign: 'center' }}>
-      <Btn type="ghost" onClick={async () => { await API.post('/auth/logout'); setUser(null); nav('/login'); }}>退出登录</Btn>
+      <Btn type="ghost" onClick={async () => { await API.post('/auth/logout'); window.location.href = '/vibetb/login'; }}>退出登录</Btn>
     </div>
   </Page>;
 }
