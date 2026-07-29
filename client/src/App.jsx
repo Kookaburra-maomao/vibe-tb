@@ -101,7 +101,7 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', padding: '0 0 60px', background: `url(${ASSET('home-title-background.png', true)}) center/cover` }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-end', padding: '0 0 60px', background: `url(${ASSET('home-title-background-1.png', true)}) center/cover` }}>
       <div style={{ background: 'rgba(255,255,255,0.92)', borderRadius: 20, padding: 32, width: '100%', maxWidth: 360, textAlign: 'center' }}>
         <img src={ASSET('09-team-badge.png')} style={{ width: 80, marginBottom: 16 }} alt="" />
         <h2 style={{ color: '#c77d3a', marginBottom: 4 }}>2026 杭研院团建</h2>
@@ -129,7 +129,7 @@ function HomePage() {
 
   return <Page title="2026 杭研院团建" hideHeader>
     <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <img src={ASSET('home-title-background.png', true)} style={{ width: '100%', display: 'block' }} alt="" />
+      <img src={ASSET('home-title-background-1.png', true)} style={{ width: '100%', display: 'block' }} alt="" />
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0,
         background: 'linear-gradient(transparent, rgba(255,255,255,0.95) 40%)',
