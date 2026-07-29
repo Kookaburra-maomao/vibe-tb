@@ -194,18 +194,49 @@ function RegisterPage() {
 
 function CarpoolPage() {
   const nav = useNavigate();
+  const [my, setMy] = useState(null);
+  const [canceling, setCanceling] = useState(false);
+
+  useEffect(() => {
+    API.get('/carpool/my').then(r => setMy(r.data.data)).catch(() => {});
+  }, []);
+
+  const cancelDriver = async () => {
+    setCanceling(true);
+    try { await API.post('/carpool/cancel-driver'); alert('已取消车主身份'); setMy({}); }
+    catch { alert('取消失败'); }
+    finally { setCanceling(false); }
+  };
+
   return <Page title="拼车出行" backTo="/" hideHeader>
     <Card>
       <img src={ASSET('01-car.png')} style={{ width: 60, display: 'block', margin: '0 auto 12px' }} alt="" />
-      <p style={{ textAlign: 'center', color: '#666', marginBottom: 20, fontSize: 14 }}>选择你的出行方式</p>
-      <div style={{ display: 'flex', gap: 12 }}>
-        <div onClick={() => nav('/carpool/driver')} style={{ flex: 1, textAlign: 'center', cursor: 'pointer' }}>
-          <img src={ASSET('btn-driver.png')} style={{ width: '100%', borderRadius: 10 }} alt="" />
+      {my?.driver ? (
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ color: '#5b8c5a', fontWeight: 600, fontSize: 15 }}>
+            🚗 你已是车主（{my.driver.total_seats}座）
+            {my.driver.plate && <span style={{ fontSize: 13, color: '#888', display: 'block' }}>{my.driver.plate}</span>}
+          </p>
+          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+            <Btn type="outline" onClick={() => nav('/carpool/driver')} style={{ flex: 1 }}>修改信息</Btn>
+            <Btn type="outline" onClick={cancelDriver} disabled={canceling} style={{ flex: 1, background: '#fff2f0', border: '2px solid #ff4d4f', color: '#ff4d4f' }}>
+              {canceling ? '取消中...' : '取消车主'}
+            </Btn>
+          </div>
         </div>
-        <div onClick={() => nav('/carpool/list')} style={{ flex: 1, textAlign: 'center', cursor: 'pointer' }}>
-          <img src={ASSET('btn-passenger.png')} style={{ width: '100%', borderRadius: 10 }} alt="" />
-        </div>
-      </div>
+      ) : (
+        <>
+          <p style={{ textAlign: 'center', color: '#666', marginBottom: 20, fontSize: 14 }}>选择你的出行方式</p>
+          <div style={{ display: 'flex', gap: 12 }}>
+            <div onClick={() => nav('/carpool/driver')} style={{ flex: 1, textAlign: 'center', cursor: 'pointer' }}>
+              <img src={ASSET('btn-driver.png')} style={{ width: '100%', borderRadius: 10 }} alt="" />
+            </div>
+            <div onClick={() => nav('/carpool/list')} style={{ flex: 1, textAlign: 'center', cursor: 'pointer' }}>
+              <img src={ASSET('btn-passenger.png')} style={{ width: '100%', borderRadius: 10 }} alt="" />
+            </div>
+          </div>
+        </>
+      )}
     </Card>
   </Page>;
 }
@@ -233,21 +264,12 @@ function CarpoolDriverPage() {
     finally { setSaving(false); }
   };
 
-  const cancelDriver = async () => {
-    try {
-      await API.post('/carpool/cancel-driver');
-      alert('已取消车主身份');
-      nav('/carpool');
-    } catch { alert('取消失败'); }
-  };
-
   return <Page title="我是车主" hideHeader backTo="/carpool">
     <Card>
       <img src={ASSET('btn-driver.png')} style={{ width: '100%', borderRadius: 10, marginBottom: 16 }} alt="" />
       <Input label="总座位数（含司机）" value={seats} onChange={v => setSeats(parseInt(v) || 4)} type="number" />
       <Input label="车牌号（可选）" value={plate} onChange={setPlate} placeholder="浙A·12345" />
-      <Btn block onClick={submit} disabled={saving}>{my === 'driver' ? '更新信息' : '登记为车主'}</Btn>
-      {my === 'driver' && <Btn type="ghost" block onClick={cancelDriver} style={{ marginTop: 8 }}>取消车主身份</Btn>}
+      <Btn block onClick={submit} disabled={saving}>{my === 'driver' ? '更新信息' : '登记为车主'}</Btn>}
     </Card>
   </Page>;
 }
