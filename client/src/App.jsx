@@ -270,7 +270,7 @@ function CarpoolDriverPage() {
     finally { setSaving(false); }
   };
 
-  return <Page title="我是车主" hideHeader backTo="/carpool">
+  return <Page title="我是车主" backTo="/carpool">
     <Card>
       <img src={ASSET('btn-driver.png')} style={{ width: '100%', borderRadius: 10, marginBottom: 16 }} alt="" />
       <Input label="总座位数（含司机）" value={seats} onChange={v => setSeats(parseInt(v) || 4)} type="number" />
@@ -305,7 +305,7 @@ function CarpoolListPage() {
     API.get('/carpool/my').then(r => setMy(r.data.data)).catch(() => {});
   };
 
-  return <Page title="选择拼车" hideHeader backTo="/carpool">
+  return <Page title="选择拼车" backTo="/carpool">
     {my?.driver && <Card><p style={{ textAlign: 'center', color: '#999' }}>你是车主，无法乘车</p></Card>}
     {my?.passenger && (
       <Card>
@@ -362,7 +362,7 @@ function BusPage() {
     finally { setSaving(false); }
   };
 
-  return <Page title="乘坐大巴" backTo="/" hideHeader>
+  return <Page title="乘坐大巴" backTo="/">
     <Card>
       <img src={ASSET('btn-bus.png')} style={{ width: '100%', borderRadius: 10, marginBottom: 16 }} alt="" />
       <p style={{ textAlign: 'center', color: '#666', marginBottom: 16, fontSize: 14 }}>请选择你的出发地点</p>
