@@ -122,8 +122,7 @@ function HomePage() {
 
   const items = [
     { icon: '05-group.png', label: '我要报名', path: '/register', color: '#e8883a' },
-    { icon: 'btn-bus.png', label: '乘坐大巴', path: '/bus', color: '#e8883a' },
-    { icon: '01-car.png', label: '拼车出行', path: '/carpool', color: '#5b8c5a' },
+    { icon: '01-car.png', label: '出行方案', path: '/carpool', color: '#5b8c5a' },
     { icon: '03-calendar-check.png', label: '活动打卡', path: '/checkin', color: '#4a90d9' },
     { icon: '10-camera-badge.png', label: '小游戏', path: '/games', color: '#c77d3a' },
   ];
@@ -162,13 +161,12 @@ function RegisterPage() {
   const [phone, setPhone] = useState('');
   const [idCard, setIdCard] = useState('');
   const [registered, setRegistered] = useState(false);
-  const [note, setNote] = useState('');
 
   useEffect(() => {
     API.get('/registration').then(r => {
       if (r.data.data?.length) {
         const mine = r.data.data.find(d => d.user_id === user?.id);
-        if (mine) { setPhone(mine.phone || ''); setIdCard(mine.id_card || ''); setNote(mine.note || ''); setRegistered(true); }
+        if (mine) { setPhone(mine.phone || ''); setIdCard(mine.id_card || ''); setRegistered(true); }
       }
     }).catch(() => {});
   }, [user]);
@@ -176,20 +174,19 @@ function RegisterPage() {
   const submit = async () => {
     if (!phone.trim()) return alert('请输入手机号');
     try {
-      await API.post('/registration', { phone: phone.trim(), id_card: idCard.trim() || null, note });
+      await API.post('/registration', { phone: phone.trim(), id_card: idCard.trim() || null });
       setRegistered(true);
       alert('报名成功！');
       nav('/');
     } catch { alert('报名失败，请重试'); }
   };
 
-  return <Page title="我要报名" backTo="/" hideHeader>
+  return <Page title="我要报名" backTo="/">
     <Card>
       <img src={ASSET('06-phone.png')} style={{ width: 48, display: 'block', margin: '0 auto 12px' }} alt="" />
       <Input label="手机号" value={phone} onChange={setPhone} placeholder="输入手机号即可报名" type="tel" />
       <Input label="身份证号" value={idCard} onChange={setIdCard} placeholder="仅用于购买保险，不会泄露" />
       <p style={{ fontSize: 11, color: '#bbb', marginTop: -8, marginBottom: 12 }}>仅用于购买保险，不会泄露</p>
-      <Input label="备注（可选）" value={note} onChange={setNote} placeholder="如：自驾前往" />
       <Btn block onClick={submit}>{registered ? '更新报名信息' : '立即报名'}</Btn>
       {registered && <p style={{ textAlign: 'center', color: '#52c41a', marginTop: 8, fontSize: 13 }}>✅ 已报名</p>}
     </Card>
@@ -212,7 +209,7 @@ function CarpoolPage() {
     finally { setCanceling(false); }
   };
 
-  return <Page title="拼车出行" backTo="/" hideHeader>
+  return <Page title="出行方案" backTo="/">
     <Card>
       <img src={ASSET('01-car.png')} style={{ width: 60, display: 'block', margin: '0 auto 12px' }} alt="" />
       {my?.driver ? (
@@ -231,12 +228,17 @@ function CarpoolPage() {
       ) : (
         <>
           <p style={{ textAlign: 'center', color: '#666', marginBottom: 20, fontSize: 14 }}>选择你的出行方式</p>
-          <div style={{ display: 'flex', gap: 12 }}>
-            <div onClick={() => nav('/carpool/driver')} style={{ flex: 1, textAlign: 'center', cursor: 'pointer' }}>
-              <img src={ASSET('btn-driver.png')} style={{ width: '100%', borderRadius: 10 }} alt="" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div onClick={() => nav('/bus')} style={{ textAlign: 'center', cursor: 'pointer' }}>
+              <img src={ASSET('btn-bus.png')} style={{ width: '100%', borderRadius: 10 }} alt="" />
             </div>
-            <div onClick={() => nav('/carpool/list')} style={{ flex: 1, textAlign: 'center', cursor: 'pointer' }}>
-              <img src={ASSET('btn-passenger.png')} style={{ width: '100%', borderRadius: 10 }} alt="" />
+            <div style={{ display: 'flex', gap: 12 }}>
+              <div onClick={() => nav('/carpool/driver')} style={{ flex: 1, textAlign: 'center', cursor: 'pointer' }}>
+                <img src={ASSET('btn-driver.png')} style={{ width: '100%', borderRadius: 10 }} alt="" />
+              </div>
+              <div onClick={() => nav('/carpool/list')} style={{ flex: 1, textAlign: 'center', cursor: 'pointer' }}>
+                <img src={ASSET('btn-passenger.png')} style={{ width: '100%', borderRadius: 10 }} alt="" />
+              </div>
             </div>
           </div>
         </>
@@ -423,7 +425,7 @@ function CheckinPage() {
     finally { setUpdating(null); }
   };
 
-  return <Page title="活动打卡" backTo="/" hideHeader>
+  return <Page title="活动打卡" backTo="/">
     <p style={{ textAlign: 'center', color: '#666', marginBottom: 16, fontSize: 14 }}>
       点击下方活动卡片完成打卡，每个活动限打一次
     </p>
@@ -453,7 +455,7 @@ function CheckinPage() {
 
 function GamesPage() {
   const nav = useNavigate();
-  return <Page title="小游戏" hideHeader backTo="/">
+  return <Page title="小游戏" backTo="/">
     <Card>
       <div onClick={() => nav('/games/undercover')} style={{ textAlign: 'center', cursor: 'pointer', padding: 20 }}>
         <img src={ASSET('08-leaf-badge.png')} style={{ width: 64, marginBottom: 8 }} alt="" />
