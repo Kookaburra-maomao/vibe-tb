@@ -382,6 +382,26 @@ router.post('/game/rooms/:code/vote', requireAuth, async (ctx) => {
 });
 
 // ============================================================
+// 大巴出行
+// ============================================================
+router.post('/bus', requireAuth, async (ctx) => {
+  const { location } = ctx.request.body;
+  if (!location || !['linping', 'jiubao'].includes(location)) {
+    ctx.status = 400; ctx.body = { error: '请选择出发地点' }; return;
+  }
+  await pool.query(
+    'INSERT INTO vibetb_bus (user_id, location) VALUES (?,?) ON DUPLICATE KEY UPDATE location=VALUES(location)',
+    [ctx.session.user.id, location]
+  );
+  ctx.body = { message: '大巴登记成功', data: { location } };
+});
+
+router.get('/bus', requireAuth, async (ctx) => {
+  const [rows] = await pool.query('SELECT * FROM vibetb_bus WHERE user_id = ?', [ctx.session.user.id]);
+  ctx.body = { data: rows[0] || null };
+});
+
+// ============================================================
 // 管理后台（给 aiwork 调用）
 // ============================================================
 router.get('/admin/stats', async (ctx) => {
@@ -389,10 +409,12 @@ router.get('/admin/stats', async (ctx) => {
   const [[driverCount]] = await pool.query('SELECT COUNT(*) as cnt FROM vibetb_drivers');
   const [[passengerCount]] = await pool.query('SELECT COUNT(*) as cnt FROM vibetb_passengers');
   const [[checkinCount]] = await pool.query('SELECT COUNT(*) as cnt FROM vibetb_checkins');
+  const [[busCount]] = await pool.query('SELECT COUNT(*) as cnt FROM vibetb_bus');
   ctx.body = {
     data: {
       registrations: regCount.cnt, drivers: driverCount.cnt,
       passengers: passengerCount.cnt, checkins: checkinCount.cnt,
+      bus: busCount.cnt,
     },
   };
 });
@@ -417,6 +439,13 @@ router.get('/admin/carpool', async (ctx) => {
      LEFT JOIN vibetb_users du ON d.user_id = du.id`
   );
   ctx.body = { data: { drivers, passengers } };
+});
+
+router.get('/admin/bus', async (ctx) => {
+  const [rows] = await pool.query(
+    `SELECT b.*, u.name, u.employee_id FROM vibetb_bus b JOIN vibetb_users u ON b.user_id = u.id ORDER BY b.created_at DESC`
+  );
+  ctx.body = { data: rows };
 });
 
 // ============================================================

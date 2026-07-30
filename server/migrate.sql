@@ -87,6 +87,14 @@ CREATE TABLE IF NOT EXISTS vibetb_game_votes (
   UNIQUE KEY uk_round_voter (room_id, round_no, voter_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS vibetb_bus (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL UNIQUE,
+  location VARCHAR(40) NOT NULL COMMENT 'linping/jiubao',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES vibetb_users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS vibetb_word_bank (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   category VARCHAR(40) NOT NULL,

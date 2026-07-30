@@ -34,7 +34,7 @@ function Page({ title, backTo, children, extra, hideHeader }) {
       {!hideHeader && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', borderBottom: '1px solid #f0e8d8', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {backTo && <span onClick={() => nav(backTo)} style={{ fontSize: 20, cursor: 'pointer' }}>←</span>}
+            {backTo && <img src={ASSET('btn-back.png')} onClick={() => nav(backTo)} style={{ width: 28, height: 28, cursor: 'pointer' }} alt="返回" />}
             <span style={{ fontSize: 16, fontWeight: 700, color: '#c77d3a' }}>{title}</span>
           </div>
           {extra}
@@ -122,6 +122,7 @@ function HomePage() {
 
   const items = [
     { icon: '05-group.png', label: '我要报名', path: '/register', color: '#e8883a' },
+    { icon: 'btn-bus.png', label: '乘坐大巴', path: '/bus', color: '#e8883a' },
     { icon: '01-car.png', label: '拼车出行', path: '/carpool', color: '#5b8c5a' },
     { icon: '03-calendar-check.png', label: '活动打卡', path: '/checkin', color: '#4a90d9' },
     { icon: '10-camera-badge.png', label: '小游戏', path: '/games', color: '#c77d3a' },
@@ -269,7 +270,7 @@ function CarpoolDriverPage() {
       <img src={ASSET('btn-driver.png')} style={{ width: '100%', borderRadius: 10, marginBottom: 16 }} alt="" />
       <Input label="总座位数（含司机）" value={seats} onChange={v => setSeats(parseInt(v) || 4)} type="number" />
       <Input label="车牌号（可选）" value={plate} onChange={setPlate} placeholder="浙A·12345" />
-      <Btn block onClick={submit} disabled={saving}>{my === 'driver' ? '更新信息' : '登记为车主'}</Btn>}
+      <Btn block onClick={submit} disabled={saving}>{my === 'driver' ? '更新信息' : '登记为车主'}</Btn>
     </Card>
   </Page>;
 }
@@ -335,6 +336,62 @@ function CarpoolListPage() {
         </Card>
       );
     })}
+  </Page>;
+}
+
+function BusPage() {
+  const nav = useNavigate();
+  const [my, setMy] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    API.get('/bus').then(r => setMy(r.data.data)).catch(() => {});
+  }, []);
+
+  const selectLocation = async (loc) => {
+    setSaving(true);
+    try {
+      await API.post('/bus', { location: loc });
+      setMy({ location: loc });
+    } catch { alert('登记失败，请重试'); }
+    finally { setSaving(false); }
+  };
+
+  return <Page title="乘坐大巴" backTo="/" hideHeader>
+    <Card>
+      <img src={ASSET('btn-bus.png')} style={{ width: '100%', borderRadius: 10, marginBottom: 16 }} alt="" />
+      <p style={{ textAlign: 'center', color: '#666', marginBottom: 16, fontSize: 14 }}>请选择你的出发地点</p>
+      {my?.location ? (
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ color: '#e8883a', fontWeight: 700, fontSize: 16 }}>
+            🚌 已选择：{my.location === 'linping' ? '临平总部' : '九堡红嘉汇'}
+          </p>
+          <Btn type="outline" onClick={() => setMy(null)} style={{ marginTop: 8 }}>重新选择</Btn>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', gap: 12 }}>
+          <div onClick={() => selectLocation('linping')} style={{
+            flex: 1, textAlign: 'center', cursor: 'pointer', background: '#fff7f0',
+            borderRadius: 12, padding: '24px 12px', border: '2px solid #e8883a',
+            opacity: saving ? 0.5 : 1,
+          }}>
+            <img src={ASSET('04-location-pin.png')} style={{ width: 48, marginBottom: 8 }} alt="" />
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#c77d3a' }}>临平总部</div>
+            <div style={{ fontSize: 12, color: '#999', marginTop: 4 }}>集合出发</div>
+          </div>
+          <div onClick={() => selectLocation('jiubao')} style={{
+            flex: 1, textAlign: 'center', cursor: 'pointer', background: '#fff7f0',
+            borderRadius: 12, padding: '24px 12px', border: '2px solid #e8883a',
+            opacity: saving ? 0.5 : 1,
+          }}>
+            <img src={ASSET('04-location-pin.png')} style={{ width: 48, marginBottom: 8 }} alt="" />
+            <div style={{ fontSize: 15, fontWeight: 700, color: '#c77d3a' }}>九堡红嘉汇</div>
+            <div style={{ fontSize: 12, color: '#999', marginTop: 4 }}>集合出发</div>
+          </div>
+        </div>
+      )}
+      {saving && <p style={{ textAlign: 'center', color: '#999', marginTop: 12 }}>保存中...</p>}
+    </Card>
   </Page>;
 }
 
@@ -580,6 +637,7 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<HomePage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/bus" element={<BusPage />} />
       <Route path="/carpool" element={<CarpoolPage />} />
       <Route path="/carpool/driver" element={<CarpoolDriverPage />} />
       <Route path="/carpool/list" element={<CarpoolListPage />} />
