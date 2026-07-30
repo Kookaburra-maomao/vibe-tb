@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS vibetb_registrations (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   user_id BIGINT NOT NULL,
   phone VARCHAR(20) NULL,
+  id_card VARCHAR(18) NULL COMMENT '身份证号',
   note TEXT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES vibetb_users(id)

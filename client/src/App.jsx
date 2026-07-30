@@ -160,6 +160,7 @@ function RegisterPage() {
   const nav = useNavigate();
   const { user } = useUser();
   const [phone, setPhone] = useState('');
+  const [idCard, setIdCard] = useState('');
   const [registered, setRegistered] = useState(false);
   const [note, setNote] = useState('');
 
@@ -167,7 +168,7 @@ function RegisterPage() {
     API.get('/registration').then(r => {
       if (r.data.data?.length) {
         const mine = r.data.data.find(d => d.user_id === user?.id);
-        if (mine) { setPhone(mine.phone || ''); setNote(mine.note || ''); setRegistered(true); }
+        if (mine) { setPhone(mine.phone || ''); setIdCard(mine.id_card || ''); setNote(mine.note || ''); setRegistered(true); }
       }
     }).catch(() => {});
   }, [user]);
@@ -175,7 +176,7 @@ function RegisterPage() {
   const submit = async () => {
     if (!phone.trim()) return alert('请输入手机号');
     try {
-      await API.post('/registration', { phone: phone.trim(), note });
+      await API.post('/registration', { phone: phone.trim(), id_card: idCard.trim() || null, note });
       setRegistered(true);
       alert('报名成功！');
       nav('/');
@@ -186,6 +187,8 @@ function RegisterPage() {
     <Card>
       <img src={ASSET('06-phone.png')} style={{ width: 48, display: 'block', margin: '0 auto 12px' }} alt="" />
       <Input label="手机号" value={phone} onChange={setPhone} placeholder="输入手机号即可报名" type="tel" />
+      <Input label="身份证号" value={idCard} onChange={setIdCard} placeholder="仅用于购买保险，不会泄露" />
+      <p style={{ fontSize: 11, color: '#bbb', marginTop: -8, marginBottom: 12 }}>仅用于购买保险，不会泄露</p>
       <Input label="备注（可选）" value={note} onChange={setNote} placeholder="如：自驾前往" />
       <Btn block onClick={submit}>{registered ? '更新报名信息' : '立即报名'}</Btn>
       {registered && <p style={{ textAlign: 'center', color: '#52c41a', marginTop: 8, fontSize: 13 }}>✅ 已报名</p>}

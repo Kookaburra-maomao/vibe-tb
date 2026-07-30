@@ -66,16 +66,16 @@ router.post('/auth/logout', async (ctx) => {
 // 报名
 // ============================================================
 router.post('/registration', requireAuth, async (ctx) => {
-  const { phone } = ctx.request.body;
+  const { phone, id_card } = ctx.request.body;
   const [existing] = await pool.query('SELECT id FROM vibetb_registrations WHERE user_id = ?', [ctx.session.user.id]);
   if (existing.length > 0) {
-    await pool.query('UPDATE vibetb_registrations SET phone = ?, note = ? WHERE id = ?',
-      [phone || null, ctx.request.body.note || null, existing[0].id]);
+    await pool.query('UPDATE vibetb_registrations SET phone = ?, id_card = ?, note = ? WHERE id = ?',
+      [phone || null, id_card || null, ctx.request.body.note || null, existing[0].id]);
     ctx.body = { message: '报名信息已更新' };
     return;
   }
-  const [r] = await pool.query('INSERT INTO vibetb_registrations (user_id, phone) VALUES (?, ?)',
-    [ctx.session.user.id, phone || null]);
+  const [r] = await pool.query('INSERT INTO vibetb_registrations (user_id, phone, id_card) VALUES (?, ?, ?)',
+    [ctx.session.user.id, phone || null, id_card || null]);
   ctx.body = { data: { id: r.insertId }, message: '报名成功' };
 });
 
