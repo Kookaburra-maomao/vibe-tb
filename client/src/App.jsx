@@ -34,7 +34,7 @@ function Page({ title, backTo, children, extra, hideHeader }) {
       {!hideHeader && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: '#fff', borderBottom: '1px solid #f0e8d8', flexShrink: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {backTo && <img src={ASSET('btn-back.png')} onClick={() => nav(backTo)} style={{ width: 28, height: 28, cursor: 'pointer' }} alt="返回" />}
+            {backTo && <img src={ASSET('btn-back.png')} onClick={() => nav(backTo)} style={{ height: 20, cursor: 'pointer' }} alt="返回" />}
             <span style={{ fontSize: 16, fontWeight: 700, color: '#c77d3a' }}>{title}</span>
           </div>
           {extra}
